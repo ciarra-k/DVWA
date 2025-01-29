@@ -1,0 +1,31 @@
+name: Checkmarx Security Scan
+on:
+  push:
+    branches:
+master  # Change this if you want to trigger scans on other branches
+  pull_request:
+    branches:
+master  # Change this if you want to trigger scans on PRs to other branches
+jobs:
+  checkmarx:
+    runs-on: ubuntu-latest
+    steps:
+name: Checkout Code
+      uses: actions/checkout@v2
+name: Trigger Checkmarx Scan
+      run: |
+        curl -X POST "https://${cx_url}/cxrestapi/projects/08c5e7e3-218d-429e-90a7-83bfed935305/scan" \
+        -H "Authorization: Bearer ${{ secrets.CX_API_TOKEN }}" \
+        -H "Content-Type: application/json" \
+        -d '{
+              "scanningConfiguration": {
+                "scanningType": "Full Scan"
+              },
+              "source": {
+                "type": "GitHub",
+                "repository": "https://github.com/${{ github.repository }}",
+                "branch": "${{ github.ref }}"
+              }
+            }'
+        env:
+          CX_API_TOKEN: ${{ secrets.CX_API_TOKEN }}
