@@ -8,37 +8,87 @@ on:
      - master  # Change this if you want to trigger scans on PRs to other branches
   schedule:
     - cron: '30 5,17 * * *' # triggers the workflow every day at 5:30 and 17:30 UTC
+
 jobs:
-  checkmarx:
+  sast:
     runs-on: ubuntu-latest
     steps:
-     #- uses: Checkout Code
-     #- uses: Trigger Checkmarx Scan
-    - name: Checking out code
+    - name: Checkout
       uses: actions/checkout@v2
-    - name: Trigger checkmarx scan
-      run: |
-         curl -X POST "https://us.ast.checkmarx.net/cxrestapi/projects/08c5e7e3-218d-429e-90a7-83bfed935305/scan" \
-         -H "Authorization: Bearer ${{ secrets.CX_API_TOKEN }}" \
-         -H "Content-Type: application/json" \
-         -d '{
-              "scanningConfiguration": {
-                "scanningType": "Full Scan"
-              },
-              "source": {
-                "type": "GitHub",
-                "repository": "https://github.com/${{ github.repository }}",
-                "branch": "${{ github.ref }}"
-              }
-            }'
-      env:
-          CX_API_TOKEN: ${{ secrets.CX_API_TOKEN }}
+    - name: Checkmarx CxFlow Action
+      uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.4 #Github Action version
+      with:
+        project: ${{ secrets.CHECKMARX_PROJECT }} # <-- Insert Checkmarx SAST Project Name
+        #team: ${{ secrets.CHECKMARX_TEAMS }}
+        checkmarx_url: ${{ secrets.CHECKMARX_URL }} # To be stored in GitHub Secrets.
+        checkmarx_username: ${{ secrets.CHECKMARX_USER }} # To be stored in GitHub Secrets.
+        checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }} # To be stored in GitHub Secrets.
+        checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }} # To be stored in GitHub Secrets.
+        break_build: false
+        scanners: sast
+        bug_tracker: Sarif
+        params: --namespace=${{ github.repository_owner }} --checkmarx.settings-override=true --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref_name }} --cx-flow.filterSeverity --cx-flow.filterCategory  --checkmarx.disable-clubbing=true
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: cx.sarif
 
-    - name: Results
-      run: |
-           curl -X GET "https://us.ast.checkmarx.net/cxrestapi/results/aaa1a1c3-7a91-468d-9fc4-9ce01270f78e/sast" \
-           -H "Authorization: Bearer ${{ secrets.CX_API_TOKEN }}"
-      env:
-          CX_API_TOKEN: ${{ secrets.CX_API_TOKEN }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# jobs:
+#   checkmarx:
+#     runs-on: ubuntu-latest
+#     steps:
+#      #- uses: Checkout Code
+#      #- uses: Trigger Checkmarx Scan
+#     - name: Checking out code
+#       uses: actions/checkout@v2
+#     - name: Trigger checkmarx scan
+#       run: |
+#          curl -X POST "https://us.ast.checkmarx.net/cxrestapi/projects/08c5e7e3-218d-429e-90a7-83bfed935305/scan" \
+#          -H "Authorization: Bearer ${{ secrets.CX_API_TOKEN }}" \
+#          -H "Content-Type: application/json" \
+#          -d '{
+#               "scanningConfiguration": {
+#                 "scanningType": "Full Scan"
+#               },
+#               "source": {
+#                 "type": "GitHub",
+#                 "repository": "https://github.com/${{ github.repository }}",
+#                 "branch": "${{ github.ref }}"
+#               }
+#             }'
+#       env:
+#           CX_API_TOKEN: ${{ secrets.CX_API_TOKEN }}
+
+#     - name: Results
+#       run: |
+#            curl -X GET "https://us.ast.checkmarx.net/cxrestapi/results/aaa1a1c3-7a91-468d-9fc4-9ce01270f78e/sast" \
+#            -H "Authorization: Bearer ${{ secrets.CX_API_TOKEN }}"
+#       env:
+#           CX_API_TOKEN: ${{ secrets.CX_API_TOKEN }}
 
           
