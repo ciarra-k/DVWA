@@ -2,10 +2,10 @@ name: Checkmarx Security Scan
 on:
   push:
     branches:
-master  # Change this if you want to trigger scans on other branches
+      master  # Change this if you want to trigger scans on other branches
   pull_request:
     branches:
-master  # Change this if you want to trigger scans on PRs to other branches
+      master  # Change this if you want to trigger scans on PRs to other branches
 jobs:
   checkmarx:
     runs-on: ubuntu-latest
