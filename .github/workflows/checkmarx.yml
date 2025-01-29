@@ -14,8 +14,9 @@ jobs:
     steps:
      #- uses: Checkout Code
      #- uses: Trigger Checkmarx Scan
-      - uses: actions/checkout@v2
-      - run: |
+    - name: Trigger Checkmarx Scan
+      uses: actions/checkout@v2
+      run: |
          curl -X POST "https://us.ast.checkmarx.net/cxrestapi/projects/08c5e7e3-218d-429e-90a7-83bfed935305/scan" \
          -H "Authorization: Bearer ${{ secrets.CX_API_TOKEN }}" \
          -H "Content-Type: application/json" \
@@ -31,3 +32,4 @@ jobs:
             }'
         env:
           CX_API_TOKEN: ${{ secrets.CX_API_TOKEN }}
+      
