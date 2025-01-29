@@ -24,6 +24,8 @@ jobs:
         checkmarx_username: ${{ secrets.CHECKMARX_USER }} # To be stored in GitHub Secrets.
         checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }} # To be stored in GitHub Secrets.
         checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }} # To be stored in GitHub Secrets.
+        checkmarx.version: 9.1
+        repo-url: ${{ github.event.repository.url }}
         break_build: false
         scanners: sast
         bug_tracker: Sarif
@@ -32,7 +34,7 @@ jobs:
       uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: cx.sarif
-        
+
 
 
 
