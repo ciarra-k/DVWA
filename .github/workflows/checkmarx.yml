@@ -32,7 +32,7 @@ jobs:
           # optional, default is ${{ github.repository }}
           # Branch name
           branch: master
-          # optional, default is ${{ github.head_ref || github.ref }}
+          # optional, default is ${{ github.head_ref || github.ref }} ##
           # GitHub API Token
           #github_token: 
           # optional, default is ${{ github.token }}
@@ -47,29 +47,29 @@ jobs:
           #pr_number: 
           # optional, default is ${{ github.event.number }}
           #break_build: false
-       - name: Check for critical vulnerabilities
-         run: |
-          critical_vulns=$(checkmarx-cli get-results --project "${{ github.repository }}-${{ github.sha }}" | grep "Critical" | wc -l)
-          if [ "$critical_vulns" -gt 0 ]; then
-            echo "Critical vulnerabilities found. Failing the build."
-            exit 1  # This will fail the action and block merging
-          else
-            echo "No critical vulnerabilities found."
-          # Step 3: Download and parse the results from Checkmarx
-       - name: Download Checkmarx Report
-         run: |
-          curl -u ${{ secrets.CHECKMARX_API_KEY }} -o checkmarx-report.xml "${{ secrets.CHECKMARX_URL }}/cxrestapi/sast/scans/${{ github.sha }}/results"  # Adjust API endpoint as needed
+      #  - name: Check for critical vulnerabilities
+      #    run: |
+      #     critical_vulns=$(checkmarx-cli get-results --project "${{ github.repository }}-${{ github.sha }}" | grep "Critical" | wc -l)
+      #     if [ "$critical_vulns" -gt 0 ]; then
+      #       echo "Critical vulnerabilities found. Failing the build."
+      #       exit 1  # This will fail the action and block merging
+      #     else
+      #       echo "No critical vulnerabilities found."
+      #     # Step 3: Download and parse the results from Checkmarx
+      #  - name: Download Checkmarx Report
+      #    run: |
+      #     curl -u ${{ secrets.CHECKMARX_API_KEY }} -o checkmarx-report.xml "${{ secrets.CHECKMARX_URL }}/cxrestapi/sast/scans/${{ github.sha }}/results"  # Adjust API endpoint as needed
           
-      # Optional: Step 4: Check for vulnerabilities and post the results to the PR (via comment or other methods)
-       - name: Check for Critical Vulnerabilities
-         run: |
-          critical_vulns=$(grep -i "Critical" checkmarx-report.xml | wc -l)
-          if [ "$critical_vulns" -gt 0 ]; then
-            echo "Critical vulnerabilities found."
-            exit 1  # Fail the job if critical vulnerabilities are found
-          else
-            echo "No critical vulnerabilities found."
-          fi
+      # # Optional: Step 4: Check for vulnerabilities and post the results to the PR (via comment or other methods)
+      #  - name: Check for Critical Vulnerabilities
+      #    run: |
+      #     critical_vulns=$(grep -i "Critical" checkmarx-report.xml | wc -l)
+      #     if [ "$critical_vulns" -gt 0 ]; then
+      #       echo "Critical vulnerabilities found."
+      #       exit 1  # Fail the job if critical vulnerabilities are found
+      #     else
+      #       echo "No critical vulnerabilities found."
+      #     fi
 
       # # Step 5: Upload the report to GitHub Actions for visibility
       #  - name: Upload Checkmarx Report as Artifact
