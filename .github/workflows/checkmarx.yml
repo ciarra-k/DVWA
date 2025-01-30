@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Checkmarx CXFlow
-        uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.4
+        uses: checkmarx-ts/checkmarx-cxflow-github-action@v2.3
         with:
          project: ${{ secrets.CHECKMARX_PROJECT }} # <-- Insert Checkmarx SAST Project Name
          #team: ${{ secrets.CHECKMARX_TEAMS }}
@@ -38,6 +38,7 @@ jobs:
        # break_build: 'false'  # Optional: Set to 'true' to break the build if high-severity issues are found
     env:
        ACTIONS_STEP_DEBUG: true
+       
 
 
 
