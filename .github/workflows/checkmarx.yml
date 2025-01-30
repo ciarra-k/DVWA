@@ -26,7 +26,7 @@ jobs:
           # Client ID for AST portal authentication
           cx_client_id: new-client
           # Secret key for AST portal authentication
-          cx_client_secret: z0b4ab51LObRApdqUO6ooEYdXAnvlOT9
+          cx_client_secret: xkQThZ7ON29yctrpBCb9l5WIhf7Jtu45
           # Select a Checkmarx Project Name
           project_name: demo
           # optional, default is ${{ github.repository }}
