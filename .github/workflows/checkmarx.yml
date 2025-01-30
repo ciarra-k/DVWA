@@ -26,10 +26,11 @@ jobs:
           project: 'demo'  # Name of the project in Checkmarx
           app: 'ckdemo'  # Application name in Checkmarx
           #team: 'your-team-name'  # Team name in Checkmarx
-          github_token: ${{ secrets.GITHUB_TOKEN }}  # GitHub Token (automatically available in the workflow)
+          github_token: ${{ secrets.GIT_TOKEN }}  # GitHub Token (automatically available in the workflow)
           break_build: 'false'  # Optional: Set to 'true' to break the build if high-severity issues are found
     env:
        ACTIONS_STEP_DEBUG: true
+
 
 
 
