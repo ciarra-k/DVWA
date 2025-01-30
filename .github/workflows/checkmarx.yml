@@ -71,12 +71,12 @@ jobs:
             echo "No critical vulnerabilities found."
           fi
 
-      # Step 5: Upload the report to GitHub Actions for visibility
-       - name: Upload Checkmarx Report as Artifact
-         uses: actions/upload-artifact@v2
-         with:
-          name: checkmarx-report
-          path: checkmarx-report.xml  # Path to the report file
+      # # Step 5: Upload the report to GitHub Actions for visibility
+      #  - name: Upload Checkmarx Report as Artifact
+      #    uses: actions/upload-artifact@v2
+      #    with:
+      #     name: checkmarx-report
+      #     path: checkmarx-report.xml  # Path to the report file
 env:
    ACTIONS_STEP_DEBUG: true
 
