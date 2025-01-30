@@ -1,41 +1,86 @@
-name: Checkmarx Security Scan
+name: Checkmarx Scan
+
 on:
   push:
     branches:
-     - master  # Change this if you want to trigger scans on other branches
+      - main
   pull_request:
     branches:
-     - master  # Change this if you want to trigger scans on PRs to other branches
-  schedule:
-    - cron: '30 5,17 * * *' # triggers the workflow every day at 5:30 and 17:30 UTC
+      - main
 
 jobs:
-  sast:
+  checkmarx:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Checkmarx CxFlow Action
-      uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.4 #Github Action version
-      with:
-        project: ${{ secrets.CHECKMARX_PROJECT }} # <-- Insert Checkmarx SAST Project Name
-        #team: ${{ secrets.CHECKMARX_TEAMS }}
-        checkmarx_url: ${{ secrets.CHECKMARX_URL }} # To be stored in GitHub Secrets.
-        checkmarx_username: ${{ secrets.CHECKMARX_USER }} # To be stored in GitHub Secrets.
-        checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }} # To be stored in GitHub Secrets.
-        checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }} # To be stored in GitHub Secrets.
-        checkmarx.version: 9.1
-        repo-url: ${{ github.event.repository.url }}
-        break_build: false
-        scanners: sast
-        bug_tracker: Sarif
-        params: --namespace=${{ github.repository_owner }} --checkmarx.settings-override=true --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref_name }} --cx-flow.filterSeverity --cx-flow.filterCategory  --checkmarx.disable-clubbing=true
-    - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: cx.sarif
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Checkmarx CXFlow
+        uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.4
+        with:
+          # Define the necessary inputs
+          checkmarx_url: ${{ secrets.CHECKMARX_URL }}       # Your Checkmarx URL
+          checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}  # Your Checkmarx Username
+          checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}  # Your Checkmarx Password
+          project: 'demo'  # Name of the project in Checkmarx
+          app: 'ckdemo'  # Application name in Checkmarx
+          #team: 'your-team-name'  # Team name in Checkmarx
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # GitHub Token (automatically available in the workflow)
+          break_build: 'false'  # Optional: Set to 'true' to break the build if high-severity issues are found
     env:
        ACTIONS_STEP_DEBUG: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+# name: Checkmarx Security Scan
+# on:
+#   push:
+#     branches:
+#      - master  # Change this if you want to trigger scans on other branches
+#   pull_request:
+#     branches:
+#      - master  # Change this if you want to trigger scans on PRs to other branches
+#   schedule:
+#     - cron: '30 5,17 * * *' # triggers the workflow every day at 5:30 and 17:30 UTC
+
+# jobs:
+#   sast:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v2
+#     - name: Checkmarx CxFlow Action
+#       uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.4 #Github Action version
+#       with:
+#         project: ${{ secrets.CHECKMARX_PROJECT }} # <-- Insert Checkmarx SAST Project Name
+#         #team: ${{ secrets.CHECKMARX_TEAMS }}
+#         checkmarx_url: ${{ secrets.CHECKMARX_URL }} # To be stored in GitHub Secrets.
+#         checkmarx_username: ${{ secrets.CHECKMARX_USER }} # To be stored in GitHub Secrets.
+#         checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }} # To be stored in GitHub Secrets.
+#         checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }} # To be stored in GitHub Secrets.
+#         #checkmarx.version: 9.1
+#         #repo-url: ${{ github.event.repository.url }}
+#         break_build: false
+#         scanners: sast
+#         bug_tracker: Sarif
+#         params: --namespace=${{ github.repository_owner }} --checkmarx.settings-override=true --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref_name }} --cx-flow.filterSeverity --cx-flow.filterCategory  --checkmarx.disable-clubbing=true
+#     - name: Upload SARIF file
+#       uses: github/codeql-action/upload-sarif@v2
+#       with:
+#         sarif_file: cx.sarif
+#     env:
+#        ACTIONS_STEP_DEBUG: true
 
 
 
